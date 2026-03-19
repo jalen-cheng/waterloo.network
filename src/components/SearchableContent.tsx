@@ -151,7 +151,7 @@ export default function SearchableContent({ members, connections }: SearchableCo
             <div className="content-wrapper">
                 <div className="header-section">
                     <div className="title-row">
-                        <h1 className="title">uwaterloo.network</h1>
+                        <a href="/" className="title" style={{ textDecoration: 'none', color: 'inherit' }}>uwaterloo.network</a>
                     </div>
                     <div className="description">
                         <p>welcome to the official webring for university of waterloo students.</p>

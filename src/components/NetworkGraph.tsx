@@ -151,9 +151,8 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
                 const img = nodeDiv.querySelector('img');
                 if (img) {
                     const isHighlighted = highlightedMemberIds.length === 0 || highlightedMemberIds.includes(node.id);
-                    const hasNoEmbed = membersWithoutEmbed.has(node.id);
-                    const isDulledByRef = referrerDullIds.has(node.id);
-                    const baseOpacity = hasNoEmbed ? '0.25' : isDulledByRef ? '0.4' : '1';
+                    const isDulled = membersWithoutEmbed.has(node.id) || referrerDullIds.has(node.id);
+                    const baseOpacity = isDulled ? '0.25' : '1';
                     if (searchQuery && isHighlighted) {
                         img.style.filter = 'grayscale(0%)';
                         img.style.opacity = baseOpacity;
@@ -212,8 +211,7 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
             nodeDiv.style.userSelect = 'none';
             nodeDiv.style.transition = 'left 0.5s ease, top 0.5s ease, transform 0.5s ease';
 
-            const hasNoEmbed = membersWithoutEmbed.has(node.id);
-            const isDulledByRef = referrerDullIds.has(node.id);
+            const isDulled = membersWithoutEmbed.has(node.id) || referrerDullIds.has(node.id);
             const img = document.createElement('img');
             img.src = node.profilePic || '/icon.svg';
             img.style.width = '32px';
@@ -224,10 +222,8 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
             img.style.display = 'block';
             img.draggable = false;
             img.style.transition = 'filter 0.3s ease, opacity 0.3s ease';
-            if (hasNoEmbed) {
+            if (isDulled) {
                 img.style.opacity = '0.25';
-            } else if (isDulledByRef) {
-                img.style.opacity = '0.4';
             }
 
             const nameLabel = document.createElement('div');
@@ -258,7 +254,7 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
 
             nodeDiv.addEventListener('mouseleave', () => {
                 const isHighlighted = highlightedMemberIds.length === 0 || highlightedMemberIds.includes(node.id);
-                const baseOpacity = hasNoEmbed ? '0.25' : isDulledByRef ? '0.4' : '1';
+                const baseOpacity = isDulled ? '0.25' : '1';
                 if (searchQuery && isHighlighted) {
                     img.style.filter = 'grayscale(0%)';
                     img.style.opacity = baseOpacity;

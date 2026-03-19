@@ -44,9 +44,8 @@ export default function MembersTable({ members, searchQuery, membersWithoutEmbed
                 </thead>
                 <tbody>
                     {members.map((member, index) => {
-                        const hasNoEmbed = membersWithoutEmbed.has(member.id);
-                        const isDulledByRef = referrerDullIds.has(member.id);
-                        const rowOpacity = hasNoEmbed ? 0.35 : isDulledByRef ? 0.5 : undefined;
+                        const isDulled = membersWithoutEmbed.has(member.id) || referrerDullIds.has(member.id);
+                        const rowOpacity = isDulled ? 0.5 : undefined;
                         return (
                         <tr key={member.id} style={rowOpacity ? { opacity: rowOpacity } : undefined}>
                             <td className="user-cell">
