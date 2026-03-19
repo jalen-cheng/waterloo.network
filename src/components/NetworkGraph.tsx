@@ -9,6 +9,7 @@ interface NetworkGraphProps {
     highlightedMemberIds?: string[];
     searchQuery?: string;
     membersWithoutEmbed?: Set<string>;
+    referrerDullIds?: Set<string>;
 }
 
 interface Node {
@@ -20,7 +21,7 @@ interface Node {
     y: number;
 }
 
-export default function NetworkGraph({ members, connections, highlightedMemberIds = [], searchQuery = '', membersWithoutEmbed = new Set() }: NetworkGraphProps) {
+export default function NetworkGraph({ members, connections, highlightedMemberIds = [], searchQuery = '', membersWithoutEmbed = new Set(), referrerDullIds = new Set() }: NetworkGraphProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const svgRef = useRef<SVGSVGElement | null>(null);
     const nodesRef = useRef<Node[]>([]);
@@ -151,7 +152,8 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
                 if (img) {
                     const isHighlighted = highlightedMemberIds.length === 0 || highlightedMemberIds.includes(node.id);
                     const hasNoEmbed = membersWithoutEmbed.has(node.id);
-                    const baseOpacity = hasNoEmbed ? '0.25' : '1';
+                    const isDulledByRef = referrerDullIds.has(node.id);
+                    const baseOpacity = hasNoEmbed ? '0.25' : isDulledByRef ? '0.4' : '1';
                     if (searchQuery && isHighlighted) {
                         img.style.filter = 'grayscale(0%)';
                         img.style.opacity = baseOpacity;
@@ -211,6 +213,7 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
             nodeDiv.style.transition = 'left 0.5s ease, top 0.5s ease, transform 0.5s ease';
 
             const hasNoEmbed = membersWithoutEmbed.has(node.id);
+            const isDulledByRef = referrerDullIds.has(node.id);
             const img = document.createElement('img');
             img.src = node.profilePic || '/icon.svg';
             img.style.width = '32px';
@@ -218,13 +221,13 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
             img.style.borderRadius = '50%';
             img.style.objectFit = 'cover';
             img.style.filter = 'grayscale(100%)';
-            img.style.transition = 'filter 0.3s ease';
             img.style.display = 'block';
             img.draggable = false;
             img.style.transition = 'filter 0.3s ease, opacity 0.3s ease';
-            // Apply 25% opacity for members without embed
             if (hasNoEmbed) {
                 img.style.opacity = '0.25';
+            } else if (isDulledByRef) {
+                img.style.opacity = '0.4';
             }
 
             const nameLabel = document.createElement('div');
@@ -255,7 +258,7 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
 
             nodeDiv.addEventListener('mouseleave', () => {
                 const isHighlighted = highlightedMemberIds.length === 0 || highlightedMemberIds.includes(node.id);
-                const baseOpacity = hasNoEmbed ? '0.25' : '1';
+                const baseOpacity = hasNoEmbed ? '0.25' : isDulledByRef ? '0.4' : '1';
                 if (searchQuery && isHighlighted) {
                     img.style.filter = 'grayscale(0%)';
                     img.style.opacity = baseOpacity;
@@ -400,7 +403,7 @@ export default function NetworkGraph({ members, connections, highlightedMemberId
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [members, connections, isDark, zoomLevel, panOffset, membersWithoutEmbed]);
+    }, [members, connections, isDark, zoomLevel, panOffset, membersWithoutEmbed, referrerDullIds]);
 
     return (
         <div 
