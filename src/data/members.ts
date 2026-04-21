@@ -529,10 +529,12 @@ export const members: Member[] = [
     website: "https://jalen.ca",
     program: "Computer Engineering",
     // options: engineering, design, product, growth, ai/ml, research, hardware, quant, software, finance, vc
-    roles: ["engineering", "software", "ai/ml", "product"],
+    roles: ["engineering", "software", "ai/ml", "product", "research" , "vc"],
     // options: fintech, ai, climate, healthcare, edtech, marketplaces, robotics, defense, hard tech, saas, consumer, creator tools
-    verticals: ["ai", "saas"],
+    verticals: ["ai", "saas", "fintech"],
     profilePic: "/photos/jalen-cheng.jpg",
+    instagram: "https://www.instagram.com/jalen_cheng/",
+    twitter: "https://x.com/jalen_cheng",
     linkedin: "https://linkedin.com/in/jalencheng",
     connections: ["shayaan-azeem"],
   },
